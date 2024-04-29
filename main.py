@@ -5,9 +5,9 @@ from methods.basis import Basis
 import numpy as np
 
 def main():
-    data = Data("/media/darketo/31fcec1d-d7c9-4d4f-9770-1e1d235bda6f/randy/Investigation/Sparsing/Projects/SparseData/Data/Randy_Data/Experimental/gar_001.xy")
+    #data = Data("/media/darketo/31fcec1d-d7c9-4d4f-9770-1e1d235bda6f/randy/Investigation/Sparsing/Projects/SparseData/Data/Randy_Data/Experimental/gar_001.xy")
     bas = Basis()
-
+    data = Data("../Sparser/Files/test.txt", 4, 2)
     #func = data.load_data("        ")
     func = data.load_data(" ")
     print(func)
