@@ -13,8 +13,9 @@ class Data_Methods():
         return min(arr)
 
 class Data(Data_Methods):
-    def __init__(self, path):
+    def __init__(self, path, slc_range):
         self.__path = path # Original Path of the file
+        self.__slc_range = slc_range
 
     def load_data(self, delimiter):
         """ Read and Save the data in a dict """
@@ -25,7 +26,9 @@ class Data(Data_Methods):
                 if '#' in line:
                     continue
                 func[Axis_Column.x.name].append(float(line.split(delimiter)[Axis_Column.x.value])) # Split each line by delimiter and add the respective float value
-                func[Axis_Column.y.name].append(float(line.split(delimiter)[Axis_Column.y.value]))
+                
+                for i in range(1, self.__slc_range):
+                    func[Axis_Column.y.name].append(float(line.split(delimiter)[i]))
             f.close
         return func
 
