@@ -1,5 +1,6 @@
 import numpy as np
 import scipy as sp
+import scipy.fftpack as spfft
 from math import sqrt
 
 class Basis():
@@ -42,6 +43,10 @@ class Basis():
         h = np.delete(h, slice(N, lower_tr), 1)
 
         return h
+
+    def idct_mtx(self, N):
+        mtx = spfft.idct(np.identity(N), norm='ortho', axis=0)
+        return mtx
 
     def inv_bas(self, mtx):
         return np.linalg.inv(mtx)

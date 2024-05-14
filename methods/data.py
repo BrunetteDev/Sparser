@@ -23,21 +23,35 @@ class Data(Data_Methods):
 
         with open(self.__path, 'r') as f:
             func = {'x': [], 'y': []}
+            
+            for i in range(self.__slc_init, self.__slc_end):
+                func[Axis_Column.y.name].append([])
+            
             for line in f.readlines():
                 if '#' in line:
                     continue
-                func[Axis_Column.x.name].append(float(line.split(delimiter)[Axis_Column.x.value])) # Split each line by delimiter and add the respective float value                
-                aux_y = [float(line.split(delimiter)[i]) for i in range(self.__slc_init, self.__slc_end + 1)]
-                func[Axis_Column.y.name].append(aux_y)
+                #func[Axis_Column.x.name].append(float(line.split(delimiter)[Axis_Column.x.value])) # Split each line by delimiter and add the respective float value                
+                
+                aux_y = [float(line.split(delimiter)[self.__slc_init - i]) for i in range(self.__slc_init, self.__slc_end)] 
+ #               print(aux_y)
+
+                for i in range(self.__slc_init, self.__slc_end):
+                    # func[Axis_Column.y.name][self.__slc_init - i].append(aux_y[self.__init__ - i])
+                    # np.append(func[Axis_Column.y.name][self.__slc_init - i], aux_y[self.__slc_init - i])
+                    func[Axis_Column.y.name][self.__slc_init - i].append(aux_y[self.__slc_init - i])
+#                    print(func[Axis_Column.y.name][self.__slc_init - i])
+
+                #func[Axis_Column.y.name].append(np.array(aux_y))
+
                 aux_y = []
-            f.close
+
+            f.close()
         return func
 
-    def re_scale_axis(self, func, axis : str):
+    def re_scale_axis(self, arr):
         """ Centering the data for each axis """
-        axis_to_rescale = func[axis]
-        axis_min = self.find_min(axis_to_rescale)
-        return list(np.array(axis_to_rescale) - axis_min)
+        axis_min = self.find_min(arr)
+        return np.array(arr) - axis_min
 
     def export_json(self, func, path_save):
         with open(f'{path_save}', 'w', encoding="utf-8") as f:
