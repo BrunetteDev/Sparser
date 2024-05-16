@@ -2,6 +2,9 @@ import numpy as np
 import cvxpy as cvx
 import scipy.fftpack as spfft
 
+import matplotlib.pyplot as plt
+
+
 class Compressed_Sensing():    
     def choice_sample(self, N, M):
         ri = np.random.choice(N, M, replace=False)
@@ -19,9 +22,9 @@ class Compressed_Sensing():
         
         rec = np.array(vx.value)
         print("After: ", rec)
-        # rec = np.squeeze(rec)
-        # return spfft.ifft(rec, norm='ortho')
-        return result
+        rec = np.squeeze(rec)
+
+        return rec
 
     def reconst_sig(self, res, bas):
         return 0

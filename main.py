@@ -49,8 +49,9 @@ def main():
     # plt.show()
     # print(cs.reconst_sig(res, fr_mtx))
     
-    program = Program(11968,50,2,True, 1, 2, path)
-    program.run()
+    for i in range(0, 100, 10):
+        program = Program(11968 // 8,i / 100,0,True, 1, 2, path)
+        program.run()
 
 if __name__ == '__main__':
     main()
