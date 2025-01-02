@@ -5,6 +5,7 @@ from methods.cs import Compressed_Sensing
 from methods.basis import Basis
 import scipy.fftpack as spfft
 import matplotlib.pyplot as plt
+import pandas as pd
 
 class Program(Basis, Compressed_Sensing, Data):
     def __init__(self, N: int, CR: float,  base: int, multidata: bool, slc_init: int, slc_end: int, path: str, path_save_json: str) -> None:
@@ -25,7 +26,6 @@ class Program(Basis, Compressed_Sensing, Data):
         
         func = data.load_data(" ")
 
-
         for i in range(len(func['y'])):
             func['y'][i] = data.re_scale_axis(func['y'][i])
         
@@ -42,12 +42,16 @@ class Program(Basis, Compressed_Sensing, Data):
             inv_mtx = spfft.idct(mtx, norm="ortho", axis=0)
 
         ri = cs.choice_sample(self.__N, self.__M)
-
-
         cp_ri = np.sort(ri)
-        for i in range(len(cp_ri)):
-            mtx = np.delete(mtx, cp_ri[i], 0)
-            cp_ri -= cp_ri[i]
+
+        #This work but i'm try a another fast sol
+        # for i in range(len(cp_ri)):
+        #     print(i)
+        #     mtx = np.delete(mtx, cp_ri[i], 0)
+        #     cp_ri -= cp_ri[i]
+        mtx_df = pd.DataFrame(mtx)
+        mtx_df = mtx_df.drop(mtx_df.columns[ri], axis=0)
+        mtx = mtx_df.to_numpy()
 
         col = func['y']
 
@@ -57,21 +61,22 @@ class Program(Basis, Compressed_Sensing, Data):
                 if counter not in ri:
                     aux.append(col[i][counter])
             col[i] = np.array(aux)
-
         
         for i in range(len(col)):
+            #aux = [list(i) for i in mtx]
+                #"base": aux,
+            data.export_json({
+                'N': self.__N,
+                "cr": self.__CR,
+                "slc_init": self.__slc_init,
+                "slc_end":self.__slc_end
+            }, f"{self.__path_save_json}_[{i}]_metadata.json" )
+            
+            
+            
             inv = cs.compress_signal(mtx, self.__N, col[i])
-            # aux = [list(i) for i in mtx]
-            # aux2 = [float(i).__round__(4) for i in inv ]
-
-            # data.export_json({'y': aux2}, f"{self.__path_save_json}_[{i}].json")
-            # data.export_json({
-            #     'N': self.__N,
-            #     "cr": self.__CR,
-            #     "base": aux,
-            #     "slc_init": self.__slc_init,
-            #     "slc_end":self.__slc_end
-            # }, f"{self.__path_save_json}_[{i}]_metadata.json" )
+            aux2 = [float(i).__round__(4) for i in inv ]
+            data.export_json({'y': aux2}, f"{self.__path_save_json}_[{i}].json")
 
 
             #Problema Inverso

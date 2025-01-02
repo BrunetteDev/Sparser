@@ -2,7 +2,6 @@ import numpy as np
 import scipy as sp
 import scipy.fftpack as spfft
 from math import sqrt
-import pywt
 
 
 class Basis():
@@ -16,26 +15,25 @@ class Basis():
         # return spfft.fft(y, N)
     
     def build_haar_mtx(self, N, normalized=False):
-        # # Allow only size n of power 2
-        # N = 2 ** np.ceil(np.log2(N))
-        # if N > 2:
-        #     h = self.build_haar_mtx(N / 2, normalized)
-        # else:
-        #     return np.array([[1, 1], [1, -1]])
+        # Allow only size n of power 2
+        N = 2 ** np.ceil(np.log2(N))
+        if N > 2:
+            h = self.build_haar_mtx(N / 2, normalized)
+        else:
+            return np.array([[1, 1], [1, -1]])
 
-        # # calculate upper haar part
-        # h_n = np.kron(h, [1, 1])
-        # # calculate lower haar part 
-        # if normalized:
-        #     h_i = np.sqrt(N/2)*np.kron(np.eye(len(h)), [1, -1])
-        # else:
-        #     h_i = np.kron(np.eye(len(h)), [1, -1])
-        # # combine parts
-        # h = np.vstack((h_n, h_i))
+        # calculate upper haar part
+        h_n = np.kron(h, [1, 1])
+        # calculate lower haar part 
+        if normalized:
+            h_i = np.sqrt(N/2)*np.kron(np.eye(len(h)), [1, -1])
+        else:
+            h_i = np.kron(np.eye(len(h)), [1, -1])
+        # combine parts
+        h = np.vstack((h_n, h_i))
 
-        # return h
-        w = pywt.Wavelet('haar')
-        print(w)
+        return h
+        print(h)
 
     def truncate_mtx(self, h, N):
         upper_tr = (len(h[1]) - N) // 2

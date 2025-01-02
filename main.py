@@ -5,6 +5,7 @@ from methods.basis import Basis
 from metaclass import Program
 import numpy as np
 import argparse
+from os import system
 
 parser = argparse.ArgumentParser(description='Compressed Sensing 1-D \n [Example] python main.py -n 11968 -cr 0.5 -b 0 -mc 1 -ic 1 -lc 2 -p <path> -ps <path save>')
 parser.add_argument('--rowmtx', '-m', help='\nNumber of Row of Compresion Matrix')
@@ -21,12 +22,8 @@ parser.add_argument('--pathsave', '-ps', help="\n Path to save the result", type
 args = parser.parse_args()
 
 def main():
-    path = "/media/darketo/31fcec1d-d7c9-4d4f-9770-1e1d235bda6f/randy/Investigation/Sparsing/Projects/SparseData/Data/Randy_Data/Experimental/gar_001.xy"
-    path = "../Sparser/Files/formated.txt"
 
-    
-#    for i in range(0, 100, 10):
-    program = Program(args.colmtx // 12,args.compresionratio,args.base,args.multicol, args.startcol, args.lastcol, args.path, args.pathsave)
+    program = Program(args.colmtx,args.compresionratio,args.base,args.multicol, args.startcol, args.lastcol, args.path, args.pathsave)
     program.run()
 
 if __name__ == '__main__':
